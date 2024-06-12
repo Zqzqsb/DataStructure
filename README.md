@@ -1,2 +1,2 @@
 # DataStructure
-This
+This repo record my data structure implementations.
