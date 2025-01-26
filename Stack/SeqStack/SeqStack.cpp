@@ -4,11 +4,12 @@ using namespace std;
 template<typename T>
 class SeqStack
 {
-    int* data , maxSize , top = -1;
+    T* data;
+    int maxSize, top = -1;
 public:
     SeqStack(int size = 10)
     {
-        data = new int[size];
+        data = new T[size];
         maxSize = size;
     }
     ~SeqStack()
@@ -45,20 +46,3 @@ public:
         return true;
     }
 }; 
-
-
-int main()
-{
-    SeqStack<int> stack(10);
-
-    for(int i = 1 ; i <= 5 ; i++)
-    {
-        stack.push(i);
-    }
-    for(int i = 1 ; i <= 5 ; i++)
-    {
-        int e;
-        if(stack.pop(e))
-            cout << e << " ";
-    }
-}
