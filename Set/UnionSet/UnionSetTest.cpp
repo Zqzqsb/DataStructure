@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <string>
-#include "UnionSet.cpp"
+#include "UnionSet.hpp"
 
 void testBasicOperations() {
     std::cout << "Testing basic operations..." << std::endl;
@@ -14,6 +14,7 @@ void testBasicOperations() {
     for (int i = 0; i < 5; i++) {
         set.setData(i, i * 10);
         assert(set.getData(i) == i * 10);
+        assert(set.getRank(i) == 1);  // Initial rank should be 1
     }
     
     std::cout << "Basic operations test passed!" << std::endl;
@@ -44,7 +45,41 @@ void testUnionFind() {
     assert(set.isConnected(1, 3));  // Transitive connection
     assert(set.getSetCount() == 3);
     
+    // Test rank changes
+    assert(set.getRank(0) >= 1);
+    assert(set.getRank(1) >= 1);
+    
     std::cout << "Union and find operations test passed!" << std::endl;
+}
+
+void testCopyAndAssignment() {
+    std::cout << "Testing copy constructor and assignment operator..." << std::endl;
+    
+    UnionSet<int> set1(4);
+    for (int i = 0; i < 4; i++) {
+        set1.setData(i, i);
+    }
+    set1.merge(0, 1);
+    set1.merge(2, 3);
+    
+    // Test copy constructor
+    UnionSet<int> set2(set1);
+    assert(set2.getSize() == set1.getSize());
+    assert(set2.getSetCount() == set1.getSetCount());
+    assert(set2.isConnected(0, 1));
+    assert(set2.isConnected(2, 3));
+    assert(!set2.isConnected(0, 2));
+    
+    // Test assignment operator
+    UnionSet<int> set3(2);  // Different size
+    set3 = set1;
+    assert(set3.getSize() == set1.getSize());
+    assert(set3.getSetCount() == set1.getSetCount());
+    assert(set3.isConnected(0, 1));
+    assert(set3.isConnected(2, 3));
+    assert(!set3.isConnected(0, 2));
+    
+    std::cout << "Copy and assignment tests passed!" << std::endl;
 }
 
 void testEdgeCases() {
@@ -71,6 +106,14 @@ void testEdgeCases() {
     try {
         set.find(3);
         assert(false);  // Should not reach here
+    } catch (const std::out_of_range& e) {
+        // Expected exception
+    }
+    
+    // Test getRank out of range
+    try {
+        set.getRank(-1);
+        assert(false);
     } catch (const std::out_of_range& e) {
         // Expected exception
     }
@@ -109,6 +152,7 @@ int main() {
     
     testBasicOperations();
     testUnionFind();
+    testCopyAndAssignment();
     testEdgeCases();
     testWithCustomType();
     
