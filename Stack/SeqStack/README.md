@@ -1,112 +1,179 @@
-# Sequential Stack Implementation
+# 顺序栈（Sequential Stack）实现
 
-A template-based sequential stack implementation in C++ that provides basic stack operations with dynamic memory allocation.
+这是一个基于模板的C++顺序栈实现，提供了动态内存分配的基本栈操作。
 
-## Features
+## 概述
 
-- Template-based implementation supporting any data type
-- Dynamic memory allocation with customizable initial size
-- Basic stack operations (push, pop, peek)
-- Boundary checking for stack operations
-- Memory management with proper destructor
+顺序栈是一种基于数组实现的后进先出（LIFO）数据结构。它主要应用于：
+- 函数调用和递归实现
+- 表达式求值
+- 括号匹配
+- 深度优先搜索
+- 回溯算法
 
-## API Reference
+## 特性
 
-### Constructor
+- 基于模板实现，支持任意数据类型
+- 动态内存分配，可自定义初始容量
+- 提供基本栈操作（压栈、出栈、查看栈顶）
+- 边界检查确保操作安全
+- 自动内存管理
+- const 正确性实现
+
+## 核心算法实现思路
+
+### 1. 压栈操作（Push）
+
+压栈操作将元素添加到栈顶。实现需要考虑栈满的情况：
+
 ```cpp
-SeqStack(int size = 10)
+bool push(const T& x) {
+    if (top == maxSize - 1) {
+        return false;  // 栈满
+    }
+    data[++top] = x;  // 先增加top，再存储数据
+    return true;
+}
 ```
-- Creates a new stack with specified capacity (default: 10)
-- Parameters:
-  - `size`: Initial capacity of the stack
 
-### Destructor
+实现要点：
+1. **数组边界检查**：
+   - 压栈前必须检查栈是否已满
+   - top 指针表示当前栈顶位置，范围是 [-1, maxSize-1]
+   - 不要越界访问数组
+
+2. **注意事项**：
+   - 使用前置递增以确保先更新指针再存储数据
+   - 通过返回值表示操作是否成功
+   - 参数使用 const 引用以提高效率
+   - 考虑是否需要实现动态扩容（当前实现不支持）
+
+### 2. 出栈操作（Pop）
+
+出栈操作从栈顶移除元素。需要处理栈空的情况：
+
 ```cpp
-~SeqStack()
+bool pop(T& e) {
+    if (top == -1) {
+        return false;  // 栈空
+    }
+    e = data[top--];  // 先取数据，再减少top
+    return true;
+}
 ```
-- Automatically frees allocated memory when stack goes out of scope
 
-### Operations
+实现要点：
+1. **空栈处理**：
+   - 出栈前必须检查栈是否为空
+   - top 为 -1 表示栈空
+   - 通过引用返回出栈元素
 
-#### empty()
+2. **注意事项**：
+   - 使用后置递减以确保先获取数据再更新指针
+   - 不需要实际删除数据，只需移动指针
+   - 返回值表示操作是否成功
+
+## API 接口说明
+
+### 构造函数
+
 ```cpp
-bool empty()
+explicit SeqStack(int size = 10);
 ```
-- Checks if the stack is empty
-- Returns: `true` if stack is empty, `false` otherwise
+- 创建一个指定容量的栈（默认大小：10）
+- 如果 size ≤ 0 会抛出异常
+- 时间复杂度：O(1)
 
-#### push()
+### 析构函数
 ```cpp
-bool push(const T& x)
+~SeqStack();
 ```
-- Pushes an element onto the top of the stack
-- Parameters:
-  - `x`: Element to push (passed by const reference)
-- Returns: `true` if successful, `false` if stack is full
+- 自动释放分配的内存
+- 时间复杂度：O(1)
 
-#### pop()
+### 核心操作
+
 ```cpp
-bool pop(T& e)
+bool empty() const;
 ```
-- Removes and returns the top element from the stack
-- Parameters:
-  - `e`: Reference to store the popped element
-- Returns: `true` if successful, `false` if stack is empty
+- 检查栈是否为空
+- 返回：栈空返回 true，否则返回 false
+- 时间复杂度：O(1)
 
-#### getTop()
 ```cpp
-bool getTop(T& e)
+bool push(const T& x);
 ```
-- Returns the top element without removing it
-- Parameters:
-  - `e`: Reference to store the top element
-- Returns: `true` if successful, `false` if stack is empty
-
-## Usage Example
+- 将元素压入栈顶
+- 参数：要压入的元素（常量引用）
+- 返回：成功返回 true，栈满返回 false
+- 时间复杂度：O(1)
 
 ```cpp
-// Create a stack of integers with capacity 5
+bool pop(T& e);
+```
+- 弹出栈顶元素
+- 参数：用于存储弹出元素的引用
+- 返回：成功返回 true，栈空返回 false
+- 时间复杂度：O(1)
+
+```cpp
+bool getTop(T& e) const;
+```
+- 获取栈顶元素但不删除
+- 参数：用于存储栈顶元素的引用
+- 返回：成功返回 true，栈空返回 false
+- 时间复杂度：O(1)
+
+## 使用示例
+
+```cpp
+// 创建一个容量为5的整数栈
 SeqStack<int> stack(5);
 
-// Push elements
+// 压入元素
 stack.push(1);
 stack.push(2);
 stack.push(3);
 
-// Check top element
+// 查看栈顶元素
 int top;
 if (stack.getTop(top)) {
-    std::cout << "Top element: " << top << std::endl;  // Output: 3
+    std::cout << "栈顶元素: " << top << std::endl;  // 输出: 3
 }
 
-// Pop elements
+// 弹出所有元素
 int value;
 while (stack.pop(value)) {
-    std::cout << value << " ";  // Output: 3 2 1
+    std::cout << value << " ";  // 输出: 3 2 1
 }
 ```
 
-## Implementation Details
+## 复杂度分析
 
-- Uses dynamic array allocation for storage
-- Maintains a top pointer to track the stack top
-- Implements boundary checking for push and pop operations
-- Template-based for type flexibility
-- Time Complexity:
-  - Push: O(1)
-  - Pop: O(1)
-  - Top: O(1)
-  - Empty check: O(1)
+| 操作        | 时间复杂度 |
+|------------|-----------|
+| 构造       | O(1)      |
+| 析构       | O(1)      |
+| 压栈       | O(1)      |
+| 出栈       | O(1)      |
+| 获取栈顶    | O(1)      |
+| 判空       | O(1)      |
 
-## Testing
+空间复杂度：O(n)，其中 n 是栈的容量
 
-The implementation includes a comprehensive test file (`SeqStackTest.cpp`) that verifies:
-- Basic stack operations
-- Boundary conditions
-- Memory management
-- Template functionality with different data types
+## 实现细节
 
-Run the tests using:
-```bash
-g++ -o test SeqStackTest.cpp && ./test
-```
+- 使用动态数组存储元素
+- 通过 top 指针跟踪栈顶位置
+- 实现边界检查确保操作安全
+- 基于模板实现类型通用性
+- 所有操作都具有常数时间复杂度
+
+## 测试
+
+实现包含了完整的测试套件（SeqStackTest.cpp），验证了：
+- 基本栈操作（压栈、出栈、获取栈顶）
+- 边界条件（栈空、栈满）
+- 内存管理（构造、析构）
+- 不同数据类型的模板功能
+- 异常处理
