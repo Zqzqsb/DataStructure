@@ -15,6 +15,11 @@
 │   ├── MatrixDG.cpp     # 邻接矩阵实现的有向图
 │   ├── MatrixUDG.cpp    # 邻接矩阵实现的无向图
 │   └── Prim输入.png      # Prim算法输入示例
+├── Heap（堆）
+│   ├── Heap             # 堆实现
+│   │   ├── Heap.hpp     # 堆的模板类实现
+│   │   ├── HeapTest.cpp # 堆的测试代码
+│   │   └── README.md    # 堆的说明文档
 ├── LinearList（线性表）
 │   ├── LinkedListSimulatation.cpp  # 链表模拟实现
 │   ├── SequentialList.cpp          # 顺序表
@@ -28,6 +33,11 @@
 │   └── SeqStack
 │       ├── SeqStack.hpp       # 顺序栈实现
 │       └── SeqStackTest.cpp   # 顺序栈测试
+├── Trie（字典树）
+│   └── Trie
+│       ├── Trie.hpp          # 字典树实现
+│       ├── TrieTest.cpp      # 字典树测试
+│       └── README.md         # 字典树说明文档
 ├── clean.sh              # 清理可执行文件的工具脚本
 ├── README.md             # 本文件
 └── update_readme.sh      # 更新README结构的脚本
@@ -51,6 +61,18 @@
 | 二叉树 | ✅ | 包含AVL树和二叉搜索树 |
 | 图 | ✅ | 邻接矩阵和邻接表表示 |
 | 集合 | ✅ | 并查集（Union-Find）实现 |
+| 堆 | ✅ | 通用堆和索引堆实现 |
+| 字典树 | ✅ | Trie树实现，支持字符串存储和查询 |
+
+## 数据结构说明
+
+### 堆（Heap）
+- **通用堆**：支持任意可比较类型，可配置最大堆/最小堆
+- **索引堆**：支持通过索引快速访问和修改元素
+
+### 字典树（Trie）
+- 支持字符串的高效存储和查询
+- 适用于前缀匹配和字典实现
 
 ## 使用方法
 
@@ -66,7 +88,6 @@ g++ -std=c++11 -o test SeqStackTest.cpp
 # 运行测试
 ./test
 ```
-
 
 ## 开发环境
 
@@ -89,5 +110,4 @@ g++ -std=c++11 -o test SeqStackTest.cpp
 更新README结构（在添加新文件后运行）：
 ```bash
 ./update_readme.sh
-```
-
+``` 
